@@ -30,7 +30,8 @@ def _collect_files_aspect_impl(_, ctx):
     Returns:
          DoxygenCollectedSourcesInfo with a depset of transitive sources
     """
-    if (not ctx.attr._collect_external and ctx.label.workspace_root.startswith("external")):
+    hasskiptag = (hasattr(ctx.rule.attr, "tags") and "doxygen_skip" in ctx.rule.attr.tags)
+    if hasskiptag or (not ctx.attr._collect_external and ctx.label.workspace_root.startswith("external")):
         # Nothing to gather on external targets
         return [DoxygenCollectedSourcesInfo(srcs = depset())]
 
